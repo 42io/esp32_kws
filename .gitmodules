@@ -1,0 +1,3 @@
+[submodule "components/kws/c_keyword_spotting"]
+	path = components/kws/c_keyword_spotting
+	url = https://github.com/42io/c_keyword_spotting.git
