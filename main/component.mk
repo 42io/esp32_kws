@@ -7,4 +7,8 @@
 
 COMPONENT_EMBED_FILES := raw/zero.raw \
                          raw/unk.raw \
-                         raw/house.raw
+                         raw/house.raw \
+                         raw/marvin.raw \
+                         raw/visual.raw
+
+CFLAGS += -Werror -Wall -Wextra

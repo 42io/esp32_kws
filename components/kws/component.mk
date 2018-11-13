@@ -24,3 +24,5 @@ COMPONENT_SRCDIRS := . \
 
 c_keyword_spotting/src/features/fe.o: CFLAGS += -Wno-maybe-uninitialized
 c_keyword_spotting/lib/c_speech_features-0.4.8/c_speech_features.o: CFLAGS += -Wno-maybe-uninitialized
+
+CFLAGS += -Werror -Wall -Wextra

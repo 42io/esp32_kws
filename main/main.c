@@ -1,12 +1,3 @@
-/* Hello World Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
-
 #include "esp_system.h"
 #include "esp_timer.h"
 #include "esp_spi_flash.h"
@@ -32,19 +23,22 @@ static void load_kws_model(const char* name)
 
 static void assert_floats_equals(float a, float b)
 {
-    assert(fabs(a - b) < 0.000001);
+    assert(fabs(a - b) < 0.000042);
 }
 
-static void test_guess(int16_t* samples, float f_house, float f_zero, float f_unk)
+static void test_guess(int16_t* samples, float f_hou, float f_zer, float f_mar,  float f_vis, float f_unk)
 {
     int64_t t1 = esp_timer_get_time();
     const float* guess = kws_guess_one_sec_16b_16k_mono(samples);
     ESP_LOGW(LOG_TAG,"kws guess time %f s, free heap %d bytes",
         ((float)(esp_timer_get_time() - t1))/1000000,
         esp_get_free_heap_size());
-    assert_floats_equals(guess[0], f_house);
-    assert_floats_equals(guess[1], f_zero);
-    assert_floats_equals(guess[2], f_unk);
+    assert_floats_equals(guess[0], f_hou);
+    assert_floats_equals(guess[1], f_zer);
+    assert_floats_equals(guess[2], f_mar);
+    assert_floats_equals(guess[3], f_vis);
+    assert_floats_equals(guess[4], f_unk);
+    vTaskDelay(1); // make WDT happy
 }
 
 void app_main()
@@ -66,12 +60,20 @@ void app_main()
     while(42)
     {
         load_kws_model("/spiffs/mlp.model");
-        test_guess(get_raw_house(), 0.996505, 0, 0.002565);
-        test_guess(get_raw_zero(), 0, 0.997143, 0.001153);
-        test_guess(get_raw_unk(), 0.000318, 0.001399, 0.996432);
+        test_guess(get_raw_house(),  1.000000, 0.000000, 0.000000, 0.000000, 0.000000);
+        test_guess(get_raw_zero(),   0.000000, 0.815244, 0.000000, 0.004613, 0.000102);
+        test_guess(get_raw_marvin(), 0.000000, 0.000000, 0.996841, 0.000000, 0.002811);
+        test_guess(get_raw_visual(), 0.000000, 0.114680, 0.000000, 0.999759, 0.000000);
+        test_guess(get_raw_unk(),    0.000254, 0.000000, 0.032188, 0.000053, 0.898670);
         kws_deinit();
 
-        // TODO: cnn requres more then 4MB RAM
+        load_kws_model("/spiffs/cnn.model");
+        test_guess(get_raw_house(),  0.999965, 0.000000, 0.000000, 0.000000, 0.000004);
+        test_guess(get_raw_zero(),   0.000000, 0.998417, 0.000000, 0.000150, 0.000000);
+        test_guess(get_raw_marvin(), 0.000000, 0.000000, 0.999837, 0.000058, 0.000000);
+        test_guess(get_raw_visual(), 0.000000, 0.002439, 0.000000, 0.998520, 0.000000);
+        test_guess(get_raw_unk(),    0.000554, 0.024503, 0.112318, 0.064628, 0.233033);
+        kws_deinit();
 
         vTaskDelay(10000 / portTICK_PERIOD_MS);
     }
