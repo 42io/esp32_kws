@@ -3,11 +3,13 @@
 #include "fe.h"
 #include "kann.h"
 #include <assert.h>
+#include <stdbool.h>
 #include "stdio.h"
 
 static const char LOG_TAG[] = "[kws_guess]";
 
 static kann_t *g_ann;
+static bool g_is_rnn;
 
 void kws_init(const char* name)
 {
@@ -15,7 +17,7 @@ void kws_init(const char* name)
     kws_vfs_init();
     g_ann = kann_load(name);
     assert(g_ann);
-    assert(kann_dim_in(g_ann) == 13*49);
+    g_is_rnn = kann_is_rnn(g_ann);
 }
 
 void kws_deinit()
@@ -54,7 +56,24 @@ static float* kws_fe_one_sec_16b_16k_mono(int16_t samples[16000])
 
 static const float* kws_guess_fe(float* feat)
 {
-    const float* out = kann_apply1(g_ann, feat);
+    const float* out = NULL;
+
+    if(g_is_rnn)
+    {
+        assert(kann_dim_in(g_ann) == 13);
+        kann_rnn_start(g_ann);
+        for(int k = 0; k < 49; k++)
+        {
+            out = kann_apply1(g_ann, &feat[k*13]);
+        }
+        kann_rnn_end(g_ann);
+    }
+    else
+    {
+        assert(kann_dim_in(g_ann) == 13*49);
+        out = kann_apply1(g_ann, feat);
+    }
+
     assert(out);
 
     for (int i = 0; i < kann_dim_out(g_ann); i++)

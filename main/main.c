@@ -23,7 +23,7 @@ static void load_kws_model(const char* name)
 
 static void assert_floats_equals(float a, float b)
 {
-    assert(fabs(a - b) < 0.000042);
+    assert(fabs(a - b) < 0.0002);
 }
 
 static void test_guess(int16_t* samples, float f_hou, float f_zer, float f_mar,  float f_vis, float f_unk)
@@ -73,6 +73,14 @@ void app_main()
         test_guess(get_raw_marvin(), 0.000000, 0.000000, 0.999837, 0.000058, 0.000000);
         test_guess(get_raw_visual(), 0.000000, 0.002439, 0.000000, 0.998520, 0.000000);
         test_guess(get_raw_unk(),    0.000554, 0.024503, 0.112318, 0.064628, 0.233033);
+        kws_deinit();
+
+        load_kws_model("/spiffs/rnn.model");
+        test_guess(get_raw_house(),  0.999991, 0.000002, 0.000004, 0.000001, 0.000013);
+        test_guess(get_raw_zero(),   0.000000, 0.751828, 0.000002, 0.333919, 0.000010);
+        test_guess(get_raw_marvin(), 0.000001, 0.000002, 0.999962, 0.000002, 0.000012);
+        test_guess(get_raw_visual(), 0.000020, 0.000025, 0.000001, 0.999986, 0.000003);
+        test_guess(get_raw_unk(),    0.000013, 0.000090, 0.000040, 0.001414, 0.999798);
         kws_deinit();
 
         vTaskDelay(10000 / portTICK_PERIOD_MS);
