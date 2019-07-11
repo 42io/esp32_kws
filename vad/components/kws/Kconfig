@@ -1,0 +1,26 @@
+menu "c_keyword_spotting"
+
+config KWS_VAD_VOICED_THOLD
+    int "VAD Voiced Threshold"
+    range 1 20
+    default 5
+
+choice KWS_MODEL_TYPE
+    prompt "Neural Network Type"
+    default KWS_MODEL_TYPE_RNN
+    help
+        Select neural network model to use
+
+config KWS_MODEL_TYPE_RNN
+    bool "Recurrent"
+config KWS_MODEL_TYPE_CNN
+    bool "Convolutional"
+config KWS_MODEL_TYPE_MLP
+    bool "Multilayer Perceptron"
+endchoice
+
+config KWS_DUMP_AUDIO_SAMPLE_TO_LOG
+    bool "Dump audio sample to log in base64 format"
+    default N
+
+endmenu

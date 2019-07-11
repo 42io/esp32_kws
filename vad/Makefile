@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := kws-hello-world
+PROJECT_NAME := kws_vad
 
-include $(IDF_PATH)/make/project.mk
+include $(ADF_PATH)/project.mk
 
