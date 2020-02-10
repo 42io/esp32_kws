@@ -14,6 +14,8 @@
 
     ~$ cd bench
     ~$ make defconfig erase_flash flash partition_table
+    ~$ URL=https://github.com/igrr/mkspiffs/releases/download/0.2.3/mkspiffs-0.2.3-esp-idf-linux64.tar.gz
+    ~$ curl -L $URL | tar zxf - --strip 1
     ~$ ./mkspiffs -c components/kws/c_keyword_spotting/models -b 4096 -p 256 -s 0x400000 /tmp/kws_spiffs.bin
     ~$ alias esptool="$IDF_PATH/components/esptool_py/esptool/esptool.py"
     ~$ esptool --chip esp32 --port /dev/ttyUSB0 --baud 921600 write_flash -z 0x110000 /tmp/kws_spiffs.bin
