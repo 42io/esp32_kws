@@ -1,20 +1,26 @@
 #include "kws_priv.h"
+#include "vfs.h"
 #include "fe.h"
 #include "kann.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "esp_log.h"
 
-static const char LOG_TAG[] = "kws_guess";
+static const char* TAG = "kws";
 
 static kann_t *g_ann;
 static bool g_is_rnn;
 
+_Static_assert(sizeof(csf_float) == 4, "WTF");
+_Static_assert(sizeof(float) == sizeof(csf_float), "WTF");
+
 /*****************************************************************************/
 
-void kws_init(const char* name)
+void kws_init()
 {
-    assert(sizeof(float) == 4);
+    ESP_LOGW(TAG, "backend: KANN");
+    const char* name = "/kws/0-9.model";
     kws_fs_init(name);
     g_ann = kann_load(name);
     assert(g_ann);

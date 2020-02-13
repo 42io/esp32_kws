@@ -27,7 +27,7 @@ void app_main()
     esp_log_level_set("*", ESP_LOG_INFO);
 
     ESP_LOGI(TAG, "Initialize SR handle");
-    kws_init("/kws/0-9.model");
+    kws_init();
     int sample_rate = kws_get_samp_rate();
     int audio_chunksize = kws_get_samp_chunksize();
 
@@ -55,6 +55,7 @@ void app_main()
     rsp_cfg.src_ch = 2;
     rsp_cfg.dest_rate = sample_rate;
     rsp_cfg.dest_ch = 1;
+    rsp_cfg.sample_bits = 8 * sizeof(audio_sample_t);
     rsp_cfg.type = AUDIO_CODEC_TYPE_ENCODER;
     filter = rsp_filter_init(&rsp_cfg);
 

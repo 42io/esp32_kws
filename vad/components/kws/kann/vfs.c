@@ -1,28 +1,28 @@
-#include "kws_priv.h"
+#include "vfs.h"
 #include "esp_log.h"
 #include "esp_vfs.h"
 #include <string.h>
 
 #if   CONFIG_KWS_MODEL_TYPE_RNN
-extern const uint8_t binary_audio_start[] asm("_binary_rnn_model_start");
-extern const uint8_t binary_audio_end[]   asm("_binary_rnn_model_end");
+extern const uint8_t binary_model_start[] asm("_binary_rnn_model_start");
+extern const uint8_t binary_model_end[]   asm("_binary_rnn_model_end");
 #elif CONFIG_KWS_MODEL_TYPE_CNN
-extern const uint8_t binary_audio_start[] asm("_binary_cnn_model_start");
-extern const uint8_t binary_audio_end[]   asm("_binary_cnn_model_end");
+extern const uint8_t binary_model_start[] asm("_binary_cnn_model_start");
+extern const uint8_t binary_model_end[]   asm("_binary_cnn_model_end");
 #elif CONFIG_KWS_MODEL_TYPE_MLP
-extern const uint8_t binary_audio_start[] asm("_binary_mlp_model_start");
-extern const uint8_t binary_audio_end[]   asm("_binary_mlp_model_end");
+extern const uint8_t binary_model_start[] asm("_binary_mlp_model_start");
+extern const uint8_t binary_model_end[]   asm("_binary_mlp_model_end");
 #endif
 
 static const char* TAG = "kws_fs";
 
-static const uint8_t* binary_audio_current;
+static const uint8_t* binary_model_current;
 
 /*****************************************************************************/
 
 static int kws_fs_open(const char * path, int flags, int mode)
 {
-    binary_audio_current = binary_audio_start;
+    binary_model_current = binary_model_start;
     ESP_LOGI(TAG, "open");
     return 42;
 }
@@ -39,11 +39,11 @@ static int kws_fs_close(int fd)
 
 static int kws_fs_rread (int fd, void * dst, size_t size)
 {
-    int total = binary_audio_end - binary_audio_current;
+    int total = binary_model_end - binary_model_current;
     if (total > size)
         total = size;
-    memcpy(dst, binary_audio_current, total);
-    binary_audio_current += total;
+    memcpy(dst, binary_model_current, total);
+    binary_model_current += total;
     return total;
 }
 

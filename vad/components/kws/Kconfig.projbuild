@@ -1,17 +1,32 @@
-menu "c_keyword_spotting"
+menu "VAD_KWS"
 
 config KWS_VAD_VOICED_THOLD
     int "VAD Voiced Threshold"
     range 1 20
     default 5
 
+choice KWS_PLATFORM_TYPE
+    prompt "Neural Network Type"
+    default KWS_PLATFORM_TYPE_TF
+    help
+        Select platform to use
+
+config KWS_PLATFORM_TYPE_TF
+    bool "Tensorflow micro"
+config KWS_PLATFORM_TYPE_KANN
+    bool "KANN attractivechaos"
+endchoice
+
 choice KWS_MODEL_TYPE
     prompt "Neural Network Type"
-    default KWS_MODEL_TYPE_RNN
     help
         Select neural network model to use
 
+config KWS_MODEL_TYPE_DCNN
+    depends on KWS_PLATFORM_TYPE_TF
+    bool "Depthwise separable convolution"
 config KWS_MODEL_TYPE_RNN
+    depends on KWS_PLATFORM_TYPE_KANN
     bool "Recurrent"
 config KWS_MODEL_TYPE_CNN
     bool "Convolutional"

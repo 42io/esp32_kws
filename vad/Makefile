@@ -5,5 +5,10 @@
 
 PROJECT_NAME := kws_vad
 
-include $(ADF_PATH)/project.mk
+EXTRA_COMPONENT_DIRS += $(PROJECT_PATH)/components/esp_adf_min/min
 
+include $(IDF_PATH)/make/project.mk
+
+ifndef MAKE_RESTARTS
+$(info IDF_VER is $(IDF_VER))
+endif

@@ -2,7 +2,7 @@
 
     ~$ git clone --recursive https://github.com/42io/esp32_kws.git && cd esp32_kws
 
-## Vad (ESP-ADF v2.0-beta1) [YouTube](http://www.youtube.com/watch?v=NUfNhjMcK54)
+## Vad (ESP-IDF v3.3.1) [YouTube](http://www.youtube.com/watch?v=NUfNhjMcK54)
 
     ~$ cd vad
     ~$ make defconfig size erase_flash flash monitor
