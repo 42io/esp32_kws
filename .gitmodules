@@ -10,3 +10,9 @@
 [submodule "vad/components/esp_adf_min/esp_adf"]
 	path = vad/components/esp_adf_min/esp_adf
 	url = https://github.com/espressif/esp-adf.git
+[submodule "rt/components/esp_adf_min/esp_adf"]
+	path = rt/components/esp_adf_min/esp_adf
+	url = https://github.com/espressif/esp-adf.git
+[submodule "rt/components/kws/tf/dataset"]
+	path = rt/components/kws/tf/dataset
+	url = https://github.com/42io/dataset.git
