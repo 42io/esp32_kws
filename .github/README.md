@@ -2,7 +2,7 @@
 
     ~$ git clone --recursive https://github.com/42io/esp32_kws.git && cd esp32_kws
 
-## Real Time (ESP-IDF v3.3.2) [YouTube](https://youtu.be/GGe0xbQxkhk) [Jupyter](components/kws/tf/dcnn.ipynb)
+## Real Time (ESP-IDF v3.3.2) [YouTube](https://youtu.be/GGe0xbQxkhk) [Jupyter](../rt/components/kws/tf/dcnn.ipynb)
 
     ~$ cd rt
     ~$ make defconfig size erase_flash flash monitor
