@@ -74,7 +74,7 @@ static void fe_task(void *parameters)
     csf_float* feat = kws_fe_16b_16k_mono((audio_sample_t*)buf);
 
     xEventGroupWaitAllBitsAndClear(event, BIT0);
-    memcpy(mfcc, &mfcc[KWS_MFCC_CHUNK_SZ], KWS_MFCC_RING_SZ - KWS_MFCC_CHUNK_SZ);
+    memmove(mfcc, &mfcc[KWS_MFCC_CHUNK_SZ], KWS_MFCC_RING_SZ - KWS_MFCC_CHUNK_SZ);
     memcpy(&mfcc[KWS_MFCC_RING_SZ - KWS_MFCC_CHUNK_SZ], &feat[13], KWS_MFCC_CHUNK_SZ);
     memcpy(buf, mfcc, KWS_MFCC_RING_SZ);
     xEventGroupSetBits(event, BIT1);
@@ -123,8 +123,8 @@ void* kws_init(size_t rate, size_t channels, size_t sample_bits, size_t buf_sz,
   guess_init(KWS_MFCC_RING_SZ);
 
   assert(on_detected = callback);
-  assert(queue = xQueueCreate(10, KWS_RAW_RING_SZ));
-  assert(xTaskCreate(&kws_task, "kws", 2048, NULL, 1, NULL) == pdPASS);
+  assert(queue = xQueueCreate(5, KWS_RAW_RING_SZ));
+  assert(xTaskCreate(&kws_task, "kws", 1024, NULL, 1, NULL) == pdPASS);
 
   return &ring[KWS_RAW_CHUNK_SZ];
 }

@@ -10,4 +10,4 @@ COMPONENT_SRCDIRS         += esp_adf/components/esp-adf-libs/esp_codec
 COMPONENT_OBJS            += esp_adf/components/esp-adf-libs/esp_codec/audio_alc.o \
                              esp_adf/components/esp-adf-libs/esp_codec/filter_resample.o
 
-COMPONENT_ADD_LDFLAGS     += -L$(COMPONENT_PATH)/esp_adf/components/esp-adf-libs/esp_codec/lib -lesp_processing
+COMPONENT_ADD_LDFLAGS     += -L$(COMPONENT_PATH)/esp_adf/components/esp-adf-libs/esp_codec/lib/esp32 -lesp_processing

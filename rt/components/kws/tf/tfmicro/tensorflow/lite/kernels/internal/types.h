@@ -863,6 +863,12 @@ struct DequantizationParams {
   int32 zero_point;
 };
 
+struct PerChannelDequantizationParams {
+  const float* scale;
+  const int32* zero_point;
+  int32 quantized_dimension;
+};
+
 struct FakeQuantParams {
   MinMax minmax;
   int32 num_bits;
@@ -966,8 +972,10 @@ struct PreluParams {
   int32 input_offset;
   int32 alpha_offset;
   int32 output_offset;
-  int32 output_multiplier;
-  int output_shift;
+  int32 output_multiplier_1;
+  int32 output_shift_1;
+  int32 output_multiplier_2;
+  int32 output_shift_2;
 };
 
 struct PoolParams {
@@ -1001,6 +1009,7 @@ struct ResizeBilinearParams {
 
 struct ResizeNearestNeighborParams {
   bool align_corners;
+  bool half_pixel_centers;
 };
 
 struct SliceParams {
@@ -1024,6 +1033,10 @@ struct SoftmaxParams {
   int32_t zero_point;
   float scale;
   float* table;
+  int16_t* exp_lut;
+  int16_t* one_over_one_plus_x_lut;
+  uint8_t* uint8_table1;
+  uint8_t* uint8_table2;
 };
 
 struct SpaceToBatchParams {
@@ -1071,7 +1084,7 @@ struct TanhParams {
 
 struct TransposeParams {
   int8 perm_count;
-  int32 perm[4];
+  int32 perm[5];
 };
 
 struct UnpackParams {
@@ -1082,10 +1095,11 @@ struct UnpackParams {
 struct LeakyReluParams {
   float alpha;
   int32 input_offset;
-  int32 alpha_offset;
   int32 output_offset;
-  int32 output_multiplier;
-  int output_shift;
+  int32 output_multiplier_alpha;
+  int32 output_shift_alpha;
+  int32 output_multiplier_identity;
+  int32 output_shift_identity;
 };
 
 template <typename P>

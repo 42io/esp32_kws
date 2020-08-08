@@ -42,7 +42,7 @@ static int filter1(const int keyword)
 
     if(keyword < 10)
     {
-      ESP_LOGI(TAG, "w %d", keyword);
+      ESP_LOGD(TAG, "w %d", keyword);
     }
 
     if(candidate == keyword)
@@ -134,13 +134,13 @@ static void audio_task(void *parameters)
 
     ESP_LOGI(TAG, "[ 2.1 ] Create i2s stream to read audio data from codec chip");
     i2s_stream_cfg_t i2s_cfg = I2S_STREAM_CFG_DEFAULT();
-    i2s_cfg.i2s_config.sample_rate = 48000;
+    i2s_cfg.i2s_config.sample_rate = 16000;
     i2s_cfg.type = AUDIO_STREAM_READER;
     i2s_stream_reader = i2s_stream_init(&i2s_cfg);
 
     ESP_LOGI(TAG, "[ 2.2 ] Create filter to resample audio data");
     rsp_filter_cfg_t rsp_cfg = DEFAULT_RESAMPLE_FILTER_CONFIG();
-    rsp_cfg.src_rate = 48000;
+    rsp_cfg.src_rate = 16000;
     rsp_cfg.src_ch = 2;
     rsp_cfg.dest_rate = 16000;
     rsp_cfg.dest_ch = 1;
@@ -183,7 +183,7 @@ static void audio_task(void *parameters)
         kws_detect();
         if(chunks % 10 == 0)
         {
-            ESP_LOGI(TAG,"time %f s", (float)(esp_timer_get_time()) / 1000000);
+            ESP_LOGD(TAG,"time %f s", (float)(esp_timer_get_time()) / 1000000);
         }
     }
 
@@ -213,8 +213,8 @@ void app_main()
 {
     esp_log_level_set("*", ESP_LOG_INFO);
     assert(queue = xQueueCreate(10, sizeof(int)));
-    assert(xTaskCreate(&leds_task, "leds_task", 4096, NULL, 1, NULL) == pdPASS);
-    assert(xTaskCreate(&audio_task, "main", 4096, NULL, 2, NULL) == pdPASS);
+    assert(xTaskCreate(&leds_task,  "leds_task",  3072, NULL, 1, NULL) == pdPASS);
+    assert(xTaskCreate(&audio_task, "microphone", 4096, NULL, 2, NULL) == pdPASS);
 }
 
 /*****************************************************************************/

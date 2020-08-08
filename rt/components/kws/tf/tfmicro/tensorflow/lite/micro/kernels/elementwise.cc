@@ -40,7 +40,7 @@ TfLiteStatus GenericPrepare(TfLiteContext* context, TfLiteNode* node) {
   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
   const TfLiteTensor* input = GetInput(context, node, 0);
   TfLiteTensor* output = GetOutput(context, node, 0);
-  TF_LITE_ENSURE_EQ(context, input->type, output->type);
+  TF_LITE_ENSURE_TYPES_EQ(context, input->type, output->type);
   if (!IsSupportedType(input->type)) {
     TF_LITE_KERNEL_LOG(context, "Input data type %s (%d) is not supported.",
                        TfLiteTypeGetName(input->type), input->type);
@@ -54,7 +54,7 @@ inline TfLiteStatus EvalImpl(TfLiteContext* context, TfLiteNode* node,
                              T func(T), TfLiteType expected_type) {
   const TfLiteTensor* input = GetInput(context, node, 0);
   TfLiteTensor* output = GetOutput(context, node, 0);
-  TF_LITE_ENSURE_EQ(context, input->type, expected_type);
+  TF_LITE_ENSURE_TYPES_EQ(context, input->type, expected_type);
   const int64_t num_elements = NumElements(input);
   const T* in_data = GetTensorData<T>(input);
   T* out_data = GetTensorData<T>(output);
@@ -106,62 +106,119 @@ TfLiteStatus LogicalNotEval(TfLiteContext* context, TfLiteNode* node) {
   return EvalLogical(context, node, [](bool v) { return !v; });
 }
 
+
 }  // namespace
 }  // namespace elementwise
 
 TfLiteRegistration* Register_ABS() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::AbsEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::AbsEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_SIN() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::SinEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::SinEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_COS() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::CosEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::CosEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_LOG() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::LogEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::LogEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_SQRT() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::SqrtEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::SqrtEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_RSQRT() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::RsqrtEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::RsqrtEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_SQUARE() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsNumericSupportedType>;
-  r.invoke = elementwise::SquareEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsNumericSupportedType>,
+      /*invoke=*/elementwise::SquareEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 
 TfLiteRegistration* Register_LOGICAL_NOT() {
-  static TfLiteRegistration r = {};
-  r.prepare = elementwise::GenericPrepare<elementwise::IsLogicalSupportedType>;
-  r.invoke = elementwise::LogicalNotEval;
+  static TfLiteRegistration r = {
+      /*init=*/nullptr,
+      /*free=*/nullptr,
+      /*prepare=*/
+      elementwise::GenericPrepare<elementwise::IsLogicalSupportedType>,
+      /*invoke=*/elementwise::LogicalNotEval,
+      /*profiling_string=*/nullptr,
+      /*builtin_code=*/0,
+      /*custom_name=*/nullptr,
+      /*version=*/0};
   return &r;
 }
 

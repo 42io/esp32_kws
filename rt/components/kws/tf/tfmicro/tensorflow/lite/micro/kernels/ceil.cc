@@ -32,8 +32,8 @@ TfLiteStatus Prepare(TfLiteContext* context, TfLiteNode* node) {
   TfLiteTensor* output = GetOutput(context, node, kOutputTensor);
   TF_LITE_ENSURE_EQ(context, NumInputs(node), 1);
   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
-  TF_LITE_ENSURE_EQ(context, input->type, kTfLiteFloat32);
-  TF_LITE_ENSURE_EQ(context, output->type, input->type);
+  TF_LITE_ENSURE_TYPES_EQ(context, input->type, kTfLiteFloat32);
+  TF_LITE_ENSURE_TYPES_EQ(context, output->type, input->type);
   TF_LITE_ENSURE_EQ(context, output->bytes, input->bytes);
   TF_LITE_ENSURE_EQ(context, output->dims->size, input->dims->size);
   for (int i = 0; i < output->dims->size; ++i) {
@@ -54,9 +54,14 @@ TfLiteStatus Eval(TfLiteContext* context, TfLiteNode* node) {
 }  // namespace ceil
 
 TfLiteRegistration* Register_CEIL() {
-  static TfLiteRegistration r = {};
-  r.prepare = ceil::Prepare;
-  r.invoke = ceil::Eval;
+  static TfLiteRegistration r = {/*init=*/nullptr,
+                                 /*free=*/nullptr,
+                                 /*prepare=*/ceil::Prepare,
+                                 /*invoke=*/ceil::Eval,
+                                 /*profiling_string=*/nullptr,
+                                 /*builtin_code=*/0,
+                                 /*custom_name=*/nullptr,
+                                 /*version=*/0};
   return &r;
 }
 

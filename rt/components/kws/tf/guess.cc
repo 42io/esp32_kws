@@ -1,6 +1,6 @@
 #include "kws_priv.h"
 #include "esp_log.h"
-#include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
@@ -9,8 +9,7 @@
 
 _Static_assert(sizeof(float) == 4, "WTF");
 
-extern const uint8_t binary_model_start[] asm("_binary_dcnn_tflite_start");
-extern const uint8_t binary_model_end[]   asm("_binary_dcnn_tflite_end");
+extern const uint8_t binary_model_start[] asm("_binary_dcnn_quant_tflite_start");
 
 static const char* TAG = "guess";
 
@@ -23,8 +22,8 @@ namespace {
   tflite::MicroInterpreter* interpreter = nullptr;
   TfLiteTensor* input = nullptr;
   TfLiteTensor* output = nullptr;
-  constexpr int kTensorArenaSize = 16144;
-  uint8_t tensor_arena[kTensorArenaSize];
+  constexpr int kTensorArenaSize = 12136;
+  alignas(16) uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
 
 /*****************************************************************************/
@@ -34,7 +33,6 @@ void guess_init(size_t inputs_sz)
     ESP_LOGW(TAG, "TensorFlow Lite for Microcontrollers");
 
     configASSERT(47 * 13 * sizeof(float) == inputs_sz);
-    configASSERT(kTensorArenaSize == binary_model_end - binary_model_start);
 
     // Set up logging. Google style is to avoid globals or statics because of
     // lifetime uncertainty, but since this has a trivial destructor it's okay.
@@ -49,7 +47,7 @@ void guess_init(size_t inputs_sz)
 
     // This pulls in all the operation implementations we need.
     // NOLINTNEXTLINE(runtime-global-variables)
-    static tflite::ops::micro::AllOpsResolver resolver;
+    static tflite::AllOpsResolver resolver;
 
     // Build an interpreter to run the model with.
     static tflite::MicroInterpreter static_interpreter(
@@ -60,6 +58,9 @@ void guess_init(size_t inputs_sz)
     TfLiteStatus allocate_status = interpreter->AllocateTensors();
     configASSERT(allocate_status == kTfLiteOk);
 
+    ESP_LOGW(TAG,"arena used bytes %d", interpreter->arena_used_bytes());
+    configASSERT(kTensorArenaSize == interpreter->arena_used_bytes());
+
     // Obtain pointers to the model's input and output tensors.
     input = interpreter->input(0);
     output = interpreter->output(0);
@@ -69,6 +70,10 @@ void guess_init(size_t inputs_sz)
 
     configASSERT(output->type == kTfLiteFloat32);
     configASSERT(output->bytes == 12 * sizeof(float));
+
+    int64_t t1 = esp_timer_get_time();
+    configASSERT(interpreter->Invoke() == kTfLiteOk);
+    ESP_LOGW(TAG,"invoke time %f", ((float)(esp_timer_get_time() - t1))/1000000);
 }
 
 /*****************************************************************************/
