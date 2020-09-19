@@ -62,6 +62,8 @@ static void fe_task(void *parameters)
   const EventGroupHandle_t event = parameters;
   char *buf = malloc(KWS_RAW_RING_SZ);
   assert(buf);
+  struct guess_t *guess = guess_create(KWS_MFCC_RING_SZ);
+  assert(guess);
 
   _Static_assert(KWS_RAW_RING_SZ >= KWS_MFCC_RING_SZ, "WTF");
 
@@ -80,7 +82,7 @@ static void fe_task(void *parameters)
     xEventGroupSetBits(event, BIT1);
 
     free(feat);
-    const int word = guess_16b_16k_mono((csf_float*)buf);
+    const int word = guess_16b_16k_mono(guess, (csf_float*)buf);
 
     xEventGroupWaitAllBitsAndClear(event, BIT0);
     on_detected(word);
@@ -119,8 +121,6 @@ void* kws_init(size_t rate, size_t channels, size_t sample_bits, size_t buf_sz,
   assert(sample_bits == 8 * sizeof(audio_sample_t));
   assert(channels == 1);
   assert(rate == KWS_SAMPLE_RATE_HZ);
-
-  guess_init(KWS_MFCC_RING_SZ);
 
   assert(on_detected = callback);
   assert(queue = xQueueCreate(5, KWS_RAW_RING_SZ));

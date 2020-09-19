@@ -98,13 +98,13 @@ tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/c_speech_features.
 CFLAGS += -DTF_LITE_STATIC_MEMORY
 CXXFLAGS += -O3 -DNDEBUG -std=c++11 -DTF_LITE_STATIC_MEMORY -fno-rtti
 
-COMPONENT_EMBED_FILES := tf/dcnn.quant.tflite
+COMPONENT_EMBED_FILES := tf/dcnn.quant.tflite tf/dcnn.tflite
 
 COMPONENT_PRIV_INCLUDEDIRS += .
 
 COMPONENT_SRCDIRS += .
 
-COMPONENT_OBJS += detect.o
+COMPONENT_OBJS += kws.o
 
 CFLAGS += -Werror -Wall -Wextra
 CXXFLAGS += -Werror -Wall -Wextra
