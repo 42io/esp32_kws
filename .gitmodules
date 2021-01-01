@@ -1,18 +1,7 @@
-[submodule "bench/components/kws/c_keyword_spotting"]
-	path = bench/components/kws/c_keyword_spotting
-	url = https://github.com/42io/c_keyword_spotting.git
-[submodule "vad/components/kws/tf/tflite_kws"]
-	path = vad/components/kws/tf/tflite_kws
-	url = https://github.com/42io/tflite_kws.git
-[submodule "vad/components/kws/kann/c_keyword_spotting"]
-	path = vad/components/kws/kann/c_keyword_spotting
-	url = https://github.com/42io/c_keyword_spotting.git
-[submodule "vad/components/esp_adf_min/esp_adf"]
-	path = vad/components/esp_adf_min/esp_adf
+
+[submodule "submodules/esp-adf"]
+	path = submodules/esp-adf
 	url = https://github.com/espressif/esp-adf.git
-[submodule "rt/components/esp_adf_min/esp_adf"]
-	path = rt/components/esp_adf_min/esp_adf
-	url = https://github.com/espressif/esp-adf.git
-[submodule "rt/components/kws/tf/dataset"]
-	path = rt/components/kws/tf/dataset
+[submodule "submodules/dataset"]
+	path = submodules/dataset
 	url = https://github.com/42io/dataset.git
