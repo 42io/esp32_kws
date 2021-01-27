@@ -98,7 +98,7 @@ fe/lib/c_speech_features-0.4.8/c_speech_features.o: CFLAGS += -Wno-maybe-uniniti
 CFLAGS += -DTF_LITE_STATIC_MEMORY
 CXXFLAGS += -O3 -DNDEBUG -std=c++11 -DTF_LITE_STATIC_MEMORY -fno-rtti
 
-COMPONENT_EMBED_FILES := tf/dcnn.tflite
+COMPONENT_EMBED_FILES := tf/dcnn.en.tflite tf/dcnn.ru.tflite
 
 COMPONENT_PRIV_INCLUDEDIRS += .
 

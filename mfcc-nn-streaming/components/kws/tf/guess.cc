@@ -13,11 +13,11 @@
 
 static const char* TAG = "guess";
 
-static constexpr size_t kTensorArenaSize = 18048;
+static constexpr size_t kTensorArenaSize = CONFIG_KWS_TENSOR_ARENA_SZ;
 
 static constexpr size_t GUESS_INPUT_SZ = 13 * sizeof(float);
 
-extern const uint8_t binary_model_start[] asm("_binary_dcnn_tflite_start");
+extern const uint8_t binary_model_start[] asm(CONFIG_KWS_MODEL_START);
 
 static_assert(sizeof(float) == 4, "WTF");
 
@@ -147,7 +147,7 @@ guess_t::guess_t(const tflite::Model* model):
   configASSERT(input->type == kTfLiteFloat32);
   configASSERT(input->bytes == GUESS_INPUT_SZ);
   configASSERT(output->type == kTfLiteFloat32);
-  configASSERT(output->bytes == 12 * sizeof(float));
+  configASSERT(output->bytes == CONFIG_KWS_MODEL_OUT_NUM * sizeof(float));
 
   configASSERT(interpreter.inputs_size() == interpreter.outputs_size());
   configASSERT(interpreter.inputs_size() > 2);

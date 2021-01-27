@@ -1,0 +1,27 @@
+menu "KWS"
+
+choice
+    prompt "KWS LANGUGE"
+    default KWS_LANG_EN
+
+config KWS_LANG_RU
+    bool "ru"
+
+config KWS_LANG_EN
+    bool "en"
+endchoice
+
+config KWS_MODEL_START
+    string
+    default "_binary_dcnn_en_tflite_start" if KWS_LANG_EN
+    default "_binary_dcnn_ru_tflite_start" if KWS_LANG_RU
+
+config KWS_MODEL_OUT_NUM
+    int
+    default 12
+
+config KWS_TENSOR_ARENA_SZ
+    int
+    default 18048
+
+endmenu
