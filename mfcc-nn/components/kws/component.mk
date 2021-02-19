@@ -5,8 +5,7 @@ COMPONENT_PRIV_INCLUDEDIRS := \
                 tf/tfmicro/third_party/ruy \
                 tf/dataset/google_speech_commands/src/features \
                 tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8 \
-                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130 \
-                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130/tools
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130
 
 COMPONENT_OBJS := \
                 tf/guess.o \
@@ -71,7 +70,15 @@ COMPONENT_OBJS := \
                 tf/tfmicro/tensorflow/lite/kernels/internal/quantization_util.o \
                 tf/tfmicro/tensorflow/lite/kernels/kernel_util.o \
                 tf/dataset/google_speech_commands/src/features/fe.o \
-                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/c_speech_features.o \
+                tf/dataset/google_speech_commands/src/features/fast/mfcc.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/fbank.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/logfbank.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/lifter.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/get_filterbanks.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/framesig.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/preemphasis.o \
+                tf/dataset/google_speech_commands/src/features/fast/magspec.o \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/powspec.o \
                 tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130/kiss_fft.o \
                 tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130/tools/kiss_fftr.o
 
@@ -85,14 +92,15 @@ COMPONENT_SRCDIRS := \
                 tf/tfmicro/tensorflow/lite/kernels/internal \
                 tf/tfmicro/tensorflow/lite/kernels \
                 tf/dataset/google_speech_commands/src/features \
-                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8 \
+                tf/dataset/google_speech_commands/src/features/fast \
+                tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow \
                 tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130 \
                 tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/kiss_fft130/tools
 
 tf/tfmicro/tensorflow/lite/micro/micro_interpreter.o: CXXFLAGS += -Wno-type-limits
 tf/tfmicro/tensorflow/lite/micro/micro_string.o: CXXFLAGS += -Wno-strict-aliasing
 tf/tfmicro/tensorflow/lite/micro/micro_allocator.o: CXXFLAGS += -Wno-missing-field-initializers
-tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/c_speech_features.o: CFLAGS += -Wno-maybe-uninitialized
+tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/slow/fbank.o: CFLAGS += -Wno-maybe-uninitialized
 
 CFLAGS += -DTF_LITE_STATIC_MEMORY
 CXXFLAGS += -O3 -DNDEBUG -std=c++11 -DTF_LITE_STATIC_MEMORY -fno-rtti

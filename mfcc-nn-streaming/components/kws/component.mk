@@ -5,8 +5,7 @@ COMPONENT_PRIV_INCLUDEDIRS := \
                 tf/tfmicro/third_party/ruy \
                 fe/src/features \
                 fe/lib/c_speech_features-0.4.8 \
-                fe/lib/c_speech_features-0.4.8/kiss_fft130 \
-                fe/lib/c_speech_features-0.4.8/kiss_fft130/tools
+                fe/lib/c_speech_features-0.4.8/kiss_fft130
 
 COMPONENT_OBJS := \
                 tf/guess.o \
@@ -71,7 +70,15 @@ COMPONENT_OBJS := \
                 tf/tfmicro/tensorflow/lite/kernels/internal/quantization_util.o \
                 tf/tfmicro/tensorflow/lite/kernels/kernel_util.o \
                 fe/src/features/fe.o \
-                fe/lib/c_speech_features-0.4.8/c_speech_features.o \
+                fe/src/features/fast/mfcc.o \
+                fe/lib/c_speech_features-0.4.8/slow/fbank.o \
+                fe/lib/c_speech_features-0.4.8/slow/logfbank.o \
+                fe/lib/c_speech_features-0.4.8/slow/lifter.o \
+                fe/lib/c_speech_features-0.4.8/slow/get_filterbanks.o \
+                fe/lib/c_speech_features-0.4.8/slow/framesig.o \
+                fe/lib/c_speech_features-0.4.8/slow/preemphasis.o \
+                fe/src/features/fast/magspec.o \
+                fe/lib/c_speech_features-0.4.8/slow/powspec.o \
                 fe/lib/c_speech_features-0.4.8/kiss_fft130/kiss_fft.o \
                 fe/lib/c_speech_features-0.4.8/kiss_fft130/tools/kiss_fftr.o
 
@@ -85,14 +92,15 @@ COMPONENT_SRCDIRS := \
                 tf/tfmicro/tensorflow/lite/kernels/internal \
                 tf/tfmicro/tensorflow/lite/kernels \
                 fe/src/features \
-                fe/lib/c_speech_features-0.4.8 \
+                fe/src/features/fast \
+                fe/lib/c_speech_features-0.4.8/slow \
                 fe/lib/c_speech_features-0.4.8/kiss_fft130 \
                 fe/lib/c_speech_features-0.4.8/kiss_fft130/tools
 
 tf/tfmicro/tensorflow/lite/micro/micro_interpreter.o: CXXFLAGS += -Wno-type-limits
 tf/tfmicro/tensorflow/lite/micro/micro_string.o: CXXFLAGS += -Wno-strict-aliasing
 tf/tfmicro/tensorflow/lite/micro/micro_allocator.o: CXXFLAGS += -Wno-missing-field-initializers
-fe/lib/c_speech_features-0.4.8/c_speech_features.o: CFLAGS += -Wno-maybe-uninitialized
+fe/lib/c_speech_features-0.4.8/slow/fbank.o: CFLAGS += -Wno-maybe-uninitialized
 
 CFLAGS += -DTF_LITE_STATIC_MEMORY
 CXXFLAGS += -O3 -DNDEBUG -std=c++11 -DTF_LITE_STATIC_MEMORY -fno-rtti
