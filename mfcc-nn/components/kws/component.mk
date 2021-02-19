@@ -92,7 +92,6 @@ COMPONENT_SRCDIRS := \
 tf/tfmicro/tensorflow/lite/micro/micro_interpreter.o: CXXFLAGS += -Wno-type-limits
 tf/tfmicro/tensorflow/lite/micro/micro_string.o: CXXFLAGS += -Wno-strict-aliasing
 tf/tfmicro/tensorflow/lite/micro/micro_allocator.o: CXXFLAGS += -Wno-missing-field-initializers
-tf/dataset/google_speech_commands/src/features/fe.o: CFLAGS += -Wno-maybe-uninitialized
 tf/dataset/google_speech_commands/lib/c_speech_features-0.4.8/c_speech_features.o: CFLAGS += -Wno-maybe-uninitialized
 
 CFLAGS += -DTF_LITE_STATIC_MEMORY

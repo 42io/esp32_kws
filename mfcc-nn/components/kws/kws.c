@@ -21,26 +21,30 @@ typedef int16_t audio_sample_t;
 
 #define KWS_SAMPLE_RATE_HZ   (16000)
 #define KWS_RAW_CHUNK_SZ     (1600 * sizeof(audio_sample_t))
-#define KWS_RAW_RING_SZ      (2 * KWS_RAW_CHUNK_SZ)
+#define KWS_QUEUE_ITEM_SZ    (2400 * sizeof(audio_sample_t))
 #define KWS_MFCC_CHUNK_SZ    (5 * 13 * sizeof(csf_float))
 #define KWS_MFCC_RING_SZ     (47 * 13 * sizeof(csf_float))
 
 /*****************************************************************************/
 
-static char                  ring[KWS_RAW_RING_SZ];
+static char                  ring[2 * KWS_RAW_CHUNK_SZ];
 static char                  mfcc[KWS_MFCC_RING_SZ];
 static xQueueHandle          queue;
 static void (*on_detected)(int word);
 
 /*****************************************************************************/
 
-static csf_float* kws_fe_16b_16k_mono(audio_sample_t samples[3200])
+static csf_float* kws_fe_16b_16k_mono(audio_sample_t *samples)
 {
   int n_frames, n_items_in_frame;
   csf_float *feat;
-
   n_frames = n_items_in_frame = 0;
-  feat = fe_mfcc_16k_16b_mono(samples, 2400, &n_frames, &n_items_in_frame);
+
+  _Static_assert(KWS_QUEUE_ITEM_SZ % sizeof(*samples) == 0, "WTF");
+
+  feat = fe_mfcc_16k_16b_mono(
+    samples, KWS_QUEUE_ITEM_SZ / sizeof(*samples),
+    &n_frames, &n_items_in_frame);
   assert(n_frames == 6);
   assert(n_items_in_frame == 13);
   assert(feat);
@@ -60,12 +64,12 @@ static void xEventGroupWaitAllBitsAndClear(EventGroupHandle_t e, EventBits_t b)
 static void fe_task(void *parameters)
 {
   const EventGroupHandle_t event = parameters;
-  char *buf = malloc(KWS_RAW_RING_SZ);
+  char *buf = malloc(KWS_QUEUE_ITEM_SZ);
   assert(buf);
   struct guess_t *guess = guess_create(KWS_MFCC_RING_SZ);
   assert(guess);
 
-  _Static_assert(KWS_RAW_RING_SZ >= KWS_MFCC_RING_SZ, "WTF");
+  _Static_assert(KWS_QUEUE_ITEM_SZ >= KWS_MFCC_RING_SZ, "WTF");
 
   for(;;)
   {
@@ -99,8 +103,8 @@ static void kws_task(void *parameters)
 
   assert(core0 = xEventGroupCreate());
   assert(core1 = xEventGroupCreate());
-  assert(xTaskCreatePinnedToCore(&fe_task, "worker_0", 4096, core0, 1, NULL, 0) == pdPASS);
-  assert(xTaskCreatePinnedToCore(&fe_task, "worker_1", 4096, core1, 1, NULL, 1) == pdPASS);
+  assert(xTaskCreatePinnedToCore(&fe_task, "worker_0", 3072, core0, 1, NULL, 0) == pdPASS);
+  assert(xTaskCreatePinnedToCore(&fe_task, "worker_1", 3072, core1, 1, NULL, 1) == pdPASS);
 
   for(;;)
   {
@@ -123,7 +127,7 @@ void* kws_init(size_t rate, size_t channels, size_t sample_bits, size_t buf_sz,
   assert(rate == KWS_SAMPLE_RATE_HZ);
 
   assert(on_detected = callback);
-  assert(queue = xQueueCreate(5, KWS_RAW_RING_SZ));
+  assert(queue = xQueueCreate(3, KWS_QUEUE_ITEM_SZ));
   assert(xTaskCreate(&kws_task, "kws", 1024, NULL, 1, NULL) == pdPASS);
 
   return &ring[KWS_RAW_CHUNK_SZ];
