@@ -1,0 +1,63 @@
+menu "KWS"
+
+choice
+    prompt "KWS LANGUGE"
+    default KWS_LANG_EN
+
+config KWS_LANG_EN
+    bool "en"
+endchoice
+
+config KWS_GUESS_MODEL_START
+    string
+    default "_binary_dcnn_en_tflite_start" if KWS_LANG_EN
+
+config KWS_GUESS_MODEL_OUT_NUM
+    int
+    default 12
+
+config KWS_GUESS_TENSOR_ARENA_SZ
+    int
+    default 18048
+
+choice
+    prompt "The cpu core which kws run"
+    default KWS_PINNED_TO_CORE_1
+    config KWS_PINNED_TO_CORE_0
+        bool "Core 0 (PRO CPU)"
+    config KWS_PINNED_TO_CORE_1
+        bool "Core 1 (APP CPU)"
+endchoice
+
+config KWS_PINNED_TO_CORE
+    int
+    default 0 if KWS_PINNED_TO_CORE_0
+    default 1 if KWS_PINNED_TO_CORE_1
+
+config KWS_CONFIRM_MODEL_START
+    string
+    default "_binary_dcnn_en_bin_tflite_start" if KWS_LANG_EN
+
+config KWS_CONFIRM_TENSOR_ARENA_SZ
+    int
+    default 10568
+
+config KWS_CONFIRM_THRESHOLD
+    int
+    default 5
+
+choice
+    prompt "The cpu core which confirm run"
+    default KWS_CONFIRM_PINNED_TO_CORE_0
+    config KWS_CONFIRM_PINNED_TO_CORE_0
+        bool "Core 0 (PRO CPU)"
+    config KWS_CONFIRM_PINNED_TO_CORE_1
+        bool "Core 1 (APP CPU)"
+endchoice
+
+config KWS_CONFIRM_PINNED_TO_CORE
+    int
+    default 0 if KWS_CONFIRM_PINNED_TO_CORE_0
+    default 1 if KWS_CONFIRM_PINNED_TO_CORE_1
+
+endmenu
