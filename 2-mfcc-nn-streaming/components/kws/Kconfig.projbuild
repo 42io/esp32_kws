@@ -1,7 +1,11 @@
 menu "KWS"
 
+config KWS_CONFIRM_THRESHOLD
+    int "Confidence Threshold"
+    default 5
+
 choice
-    prompt "KWS LANGUGE"
+    prompt "Model"
     default KWS_LANG_EN
 
 config KWS_LANG_EN
@@ -41,10 +45,6 @@ config KWS_CONFIRM_MODEL_START
 config KWS_CONFIRM_TENSOR_ARENA_SZ
     int
     default 10568
-
-config KWS_CONFIRM_THRESHOLD
-    int
-    default 5
 
 choice
     prompt "The cpu core which confirm run"

@@ -37,28 +37,31 @@ static void kws_callback(int keyword)
 
 static int filter1(const int keyword)
 {
-    static int candidate = -1;
-    static int stable;
+    static uint8_t stat[CONFIG_KWS_GUESS_MODEL_OUT_NUM];
+    assert(keyword < CONFIG_KWS_GUESS_MODEL_OUT_NUM);
 
-    if(keyword < 10)
+    for(int i = 0; i < CONFIG_KWS_GUESS_MODEL_OUT_NUM; i++)
     {
-      ESP_LOGD(TAG, "w %d", keyword);
-    }
-
-    if(candidate == keyword)
-    {
-        if(stable < 10)
-            stable++;
+        const uint8_t v = stat[i];
+        if(i == keyword)
+        {
+            if(v < 15) stat[i]++;
+        }
         else
-            return candidate;
-    }
-    else
-    {
-        candidate = keyword;
-        stable = 0;
+        {
+            if(v) stat[i]--;
+        }
     }
 
-    return -1;
+    int idx = -1;
+    for(int i = 0, max = 10; i < CONFIG_KWS_GUESS_MODEL_OUT_NUM; i++)
+    {
+        const uint8_t v = stat[i];
+        if(v > max)
+            max = v, idx = i;
+    }
+
+    return idx;
 }
 
 /*****************************************************************************/
@@ -67,6 +70,18 @@ static int filter2(const int keyword)
 {
     static int candidate = -1;
     const int filtered = filter1(keyword);
+    if(filtered == candidate)
+        return candidate;
+    candidate = filtered;
+    return -1;
+}
+
+/*****************************************************************************/
+
+static int filter3(const int keyword)
+{
+    static int candidate = -1;
+    const int filtered = filter2(keyword);
     if(filtered != candidate)
     {
         candidate = filtered;
@@ -99,7 +114,7 @@ static void leds_task(void *parameters)
     {
         int keyword;
         xQueueReceive(queue, &keyword, portMAX_DELAY);
-        if(filter2(keyword) > -1 && keyword < 10)
+        if(filter3(keyword) > -1 && keyword < 10)
         {
             ESP_LOGI(TAG, "Word Detected %d", keyword);
             ESP_LOGD(TAG, "Memory Total:%d Bytes, SPI:%d Bytes, Inter:%d Bytes, Dram:%d Bytes",
