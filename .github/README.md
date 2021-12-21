@@ -37,6 +37,6 @@ Simple non-streaming neural network mode. Model receives the whole [mfcc](https:
 
 ###### MFCC STREAMING DOUBLE
 
-A false positive error, or false positive, is a result that indicates a given condition exists when it does not. This example consists of two neural networks: first is for classification, second for confirmation. Confirmation allows to reduce false positives. [Jupyter](../2-mfcc-nn-streaming/components/kws/tf/dcnn.bin.ipynb):
+A false positive error, or false positive, is a result that indicates a given condition exists when it does not. This example consists of two neural networks: first is for classification, second for confirmation. Confirmation allows to reduce false positives. [Musan](../2-mfcc-nn-streaming/components/kws/tf/dcnn.bin.musan.ipynb) | [Libri](../2-mfcc-nn-streaming/components/kws/tf/dcnn.bin.libri_tpu.ipynb):
 
     ~$ make -C 2-mfcc-nn-streaming defconfig size erase_flash flash monitor

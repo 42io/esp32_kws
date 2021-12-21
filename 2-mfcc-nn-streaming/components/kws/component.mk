@@ -108,7 +108,7 @@ fe/lib/c_speech_features-0.4.8/slow/fbank.o: CFLAGS += -Wno-maybe-uninitialized
 CFLAGS += -DTF_LITE_STATIC_MEMORY -O3
 CXXFLAGS += -O3 -DNDEBUG -std=c++11 -DTF_LITE_STATIC_MEMORY -fno-rtti
 
-COMPONENT_EMBED_FILES := tf/dcnn.en.tflite tf/dcnn.en.bin.tflite
+COMPONENT_EMBED_FILES := tf/dcnn.en.tflite tf/dcnn.bin.musan.tflite tf/dcnn.bin.libri.tflite
 
 COMPONENT_PRIV_INCLUDEDIRS += .
 

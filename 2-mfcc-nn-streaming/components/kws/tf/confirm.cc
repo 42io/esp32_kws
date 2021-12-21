@@ -101,10 +101,12 @@ confirm_t::confirm_t(const tflite::Model* model):
   }
   ESP_LOGW(TAG,"invoke time %f", ((float)(esp_timer_get_time() - t1))/1000000/47);
 
-  const float t2 = -6.06364584;
+  constexpr float t2[] = {-6.06364584, -4.07492638};
+  static_assert(CONFIG_KWS_CONFIRM_MODEL_ZERO_ASSERT >= 0, "WTF");
+  static_assert(CONFIG_KWS_CONFIRM_MODEL_ZERO_ASSERT < sizeof t2 / sizeof *t2, "WTF");
 
-  configASSERT(output->bytes == sizeof t2);
-  configASSERT(output->data.f[0] == t2);
+  configASSERT(output->bytes == sizeof *t2);
+  configASSERT(output->data.f[0] == t2[CONFIG_KWS_CONFIRM_MODEL_ZERO_ASSERT]);
 
   // printf("%.9g\n", output->data.f[0]);
 }

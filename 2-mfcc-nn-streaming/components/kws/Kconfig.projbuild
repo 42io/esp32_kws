@@ -5,16 +5,18 @@ config KWS_CONFIRM_THRESHOLD
     default 5
 
 choice
-    prompt "Model"
-    default KWS_LANG_EN
+    prompt "Cinfirm Model"
+    default KWS_LANG_LIBRI
 
-config KWS_LANG_EN
-    bool "en"
+config KWS_LANG_MUSAN
+    bool "Musan"
+config KWS_LANG_LIBRI
+    bool "Libri"
 endchoice
 
 config KWS_GUESS_MODEL_START
     string
-    default "_binary_dcnn_en_tflite_start" if KWS_LANG_EN
+    default "_binary_dcnn_en_tflite_start"
 
 config KWS_GUESS_MODEL_OUT_NUM
     int
@@ -40,7 +42,13 @@ config KWS_PINNED_TO_CORE
 
 config KWS_CONFIRM_MODEL_START
     string
-    default "_binary_dcnn_en_bin_tflite_start" if KWS_LANG_EN
+    default "_binary_dcnn_bin_musan_tflite_start" if KWS_LANG_MUSAN
+    default "_binary_dcnn_bin_libri_tflite_start" if KWS_LANG_LIBRI
+
+config KWS_CONFIRM_MODEL_ZERO_ASSERT
+    int
+    default 0 if KWS_LANG_MUSAN
+    default 1 if KWS_LANG_LIBRI
 
 config KWS_CONFIRM_TENSOR_ARENA_SZ
     int
