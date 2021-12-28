@@ -103,7 +103,7 @@ COMPONENT_SRCDIRS := \
 tf/tfmicro/tensorflow/lite/micro/micro_interpreter.o: CXXFLAGS += -Wno-type-limits
 tf/tfmicro/tensorflow/lite/micro/micro_string.o: CXXFLAGS += -Wno-strict-aliasing
 tf/tfmicro/tensorflow/lite/micro/micro_allocator.o: CXXFLAGS += -Wno-missing-field-initializers
-fe/lib/c_speech_features-0.4.8/slow/fbank.o: CFLAGS += -Wno-maybe-uninitialized
+fe/lib/c_speech_features-0.4.8/slow/fbank.o: CFLAGS += -Wno-maybe-uninitialized -funroll-loops
 
 CFLAGS += -DTF_LITE_STATIC_MEMORY -O3
 CXXFLAGS += -O3 -DNDEBUG -std=c++11 -DTF_LITE_STATIC_MEMORY -fno-rtti
