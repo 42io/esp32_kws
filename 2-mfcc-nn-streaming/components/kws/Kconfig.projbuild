@@ -2,7 +2,7 @@ menu "KWS"
 
 config KWS_CONFIRM_THRESHOLD
     int "Confidence Threshold"
-    default 5
+    default 2
 
 choice
     prompt "Cinfirm Model"
@@ -46,9 +46,9 @@ config KWS_CONFIRM_MODEL_START
     default "_binary_dcnn_bin_libri_tflite_start" if KWS_LANG_LIBRI
 
 config KWS_CONFIRM_MODEL_ZERO_ASSERT
-    int
-    default 0 if KWS_LANG_MUSAN
-    default 1 if KWS_LANG_LIBRI
+    hex
+    default c0c20963 if KWS_LANG_MUSAN
+    default c08265cc if KWS_LANG_LIBRI
 
 config KWS_CONFIRM_TENSOR_ARENA_SZ
     int

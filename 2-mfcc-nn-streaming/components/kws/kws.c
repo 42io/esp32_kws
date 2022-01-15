@@ -7,6 +7,7 @@
 #include "freertos/queue.h"
 #include "freertos/event_groups.h"
 #include "esp_log.h"
+#include <sys/param.h>  // For MIN/MAX(a, b)
 
 /*****************************************************************************/
 
@@ -28,8 +29,8 @@ typedef int16_t audio_sample_t;
 
 static char                  ring[2 * KWS_RAW_CHUNK_SZ];
 static xQueueHandle          queue;
-struct guess_t              *guess;
-struct confirm_t            *confirm;
+static struct guess_t       *guess;
+static struct confirm_t     *confirm;
 static void (*on_detected)(int word);
 
 static const char* TAG = "kws";
@@ -97,7 +98,7 @@ static void kws_task(void *parameters)
       int word = guess_16b_16k_mono(guess, feat[i]);
       float confidence;
       xQueueReceive(co_io[1], &confidence, portMAX_DELAY);
-      on_detected(confidence > CONFIG_KWS_CONFIRM_THRESHOLD ? word : 10);
+      on_detected(confidence > CONFIG_KWS_CONFIRM_THRESHOLD ? word : MAX(10, word));
     }
 
     free(feat);
